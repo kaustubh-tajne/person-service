@@ -1,5 +1,6 @@
 package com.hcl.personservice.controller;
 
+import com.hcl.personservice.dto.PersonDto;
 import com.hcl.personservice.model.Person;
 import com.hcl.personservice.service.PersonService;
 import org.slf4j.Logger;
@@ -35,29 +36,29 @@ public class PersonController {
     }
 
     @GetMapping
-    public List<Person> getAll() {
+    public List<PersonDto> getAll() {
         return personService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Person getOneById(@PathVariable long id) {
+    public PersonDto getOneById(@PathVariable long id) {
         LOGGER.info("GetOneById - {}", id);
 
         return personService.getOneById(id);
     }
 
     @PostMapping
-    public Person create(@RequestBody Person person) {
-        LOGGER.info("Person Got Created - {}", person);
+    public PersonDto create(@RequestBody PersonDto personDto) {
+        LOGGER.info("Person Got Created - {}", personDto);
 
-        return personService.create(person);
+        return personService.create(personDto);
     }
 
     @PutMapping
-    public Person update(@RequestBody Person person) {
-        LOGGER.info("Person Got updated - {}", person);
+    public PersonDto update(@RequestBody PersonDto personDto) {
+        LOGGER.info("Person Got updated - {}", personDto);
 
-        return personService.update(person);
+        return personService.update(personDto);
     }
 
     @DeleteMapping("/{id}")

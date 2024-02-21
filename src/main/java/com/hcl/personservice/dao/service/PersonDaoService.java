@@ -3,6 +3,7 @@ package com.hcl.personservice.dao.service;
 import com.hcl.personservice.model.Person;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,9 +13,9 @@ import java.util.Optional;
 public class PersonDaoService {
     private List<Person> people = new ArrayList<>(
             Arrays.asList(
-                    new Person(1001, "A", "AA"),
-                    new Person(1002, "B", "BB"),
-                    new Person(1003, "C", "CC")
+                    new Person(1001, "A", "AA", LocalDate.now()),
+                    new Person(1002, "B", "BB", LocalDate.now()),
+                    new Person(1003, "C", "CC", LocalDate.now())
             )
     );
 
