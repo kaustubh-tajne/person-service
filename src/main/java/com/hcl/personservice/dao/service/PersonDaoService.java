@@ -1,6 +1,9 @@
 package com.hcl.personservice.dao.service;
 
 import com.hcl.personservice.model.Person;
+import com.hcl.personservice.repository.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -11,41 +14,29 @@ import java.util.Optional;
 
 @Service
 public class PersonDaoService {
-    private List<Person> people = new ArrayList<>(
-            Arrays.asList(
-                    new Person(1001, "A", "AA", LocalDate.now()),
-                    new Person(1002, "B", "BB", LocalDate.now()),
-                    new Person(1003, "C", "CC", LocalDate.now())
-            )
-    );
+
+    @Autowired
+    private PersonRepository personRepository;
 
     public List<Person> getAll() {
-        return people;
+        return personRepository.findAll();
     }
 
-    public Person getOneById(long id) {
-        final Optional<Person> optionalPerson = people.stream()
-                .filter(p -> p.getId() == id)
-                .findFirst();
-
-        if (optionalPerson.isPresent()) return optionalPerson.get();
-        return null;
+    public Optional<Person> getOneById(long id) {
+        return personRepository.findById(id);
     }
 
     public Person create(Person person) {
-        people.add(person);
-
-        return getOneById(person.getId());
+        return personRepository.save(person);
     }
 
     public Person update(Person person) {
-        delete(person.getId());
-
-        return create(person);
+        return personRepository.save(person);
     }
 
     public boolean delete(long id) {
-        return people.removeIf(p -> p.getId() == id);
+        personRepository.deleteById(id);
+        return true;
     }
 
 }

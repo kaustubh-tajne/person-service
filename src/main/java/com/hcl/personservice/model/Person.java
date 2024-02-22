@@ -1,9 +1,6 @@
 package com.hcl.personservice.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -12,12 +9,15 @@ import java.time.LocalDate;
 public class Person {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
     private long id;
-    @Column(name = "first_name")
+
+    @Column(name = "first_name", nullable = false, length = 30)
     private String firstName;
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false, length = 30)
     private String lastName;
-    @Column(name = "joining_date")
+    @Column(name = "joining_date", nullable = false)
     private LocalDate joiningDate;
 
     public Person() {

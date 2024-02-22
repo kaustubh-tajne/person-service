@@ -33,8 +33,10 @@ public class PersonService {
     }
 
     public PersonDto getOneById(long id) {
-        final Person person = personDaoService.getOneById(id);
-        return toDto(person);
+        final Optional<Person> optionalPerson = personDaoService.getOneById(id);
+        if (optionalPerson.isPresent())
+            return toDto(optionalPerson.get());
+        return null;
     }
 
     public PersonDto create(PersonDto personDto) {
