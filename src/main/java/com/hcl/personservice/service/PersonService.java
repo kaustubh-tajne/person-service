@@ -2,8 +2,10 @@ package com.hcl.personservice.service;
 
 import com.hcl.personservice.dao.service.PersonDaoService;
 import com.hcl.personservice.dto.PersonDto;
+import com.hcl.personservice.exception.PersonNotFoundException;
 import com.hcl.personservice.model.Person;
 import io.swagger.v3.oas.annotations.servers.Server;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +36,11 @@ public class PersonService {
 
     public PersonDto getOneById(long id) {
         final Optional<Person> optionalPerson = personDaoService.getOneById(id);
-        if (optionalPerson.isPresent())
-            return toDto(optionalPerson.get());
-        return null;
+        if (optionalPerson.isEmpty()) {
+//            throw new EntityNotFoundException("Person with #id"+id+" not found");
+            throw new PersonNotFoundException(id);
+        }
+        return toDto(optionalPerson.get());
     }
 
     public PersonDto create(PersonDto personDto) {

@@ -1,13 +1,26 @@
 package com.hcl.personservice.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
+import org.apache.logging.log4j.message.Message;
+
 import java.time.LocalDate;
 
 public class PersonDto {
     private long id;
+    @NotEmpty
+    @Size(min = 6, max = 10)
     private String firstName;
+    @NotEmpty
+    @Size(min = 6, max = 10, message = "value should be between the min and max")
     private String lastName;
+    @Null(message = "FullName should be null")
     private String fullName;
+    @NotNull
     private LocalDate joiningDate;
+    @Null(message = "experience should be null")
     private String numberOfYearsOfExperience;
 
     public long getId() {

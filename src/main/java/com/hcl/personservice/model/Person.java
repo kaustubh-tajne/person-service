@@ -10,6 +10,7 @@ public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+//    @SequenceGenerator(name = "personIdGenerator", sequenceName = "person_id_sequence")
     @Column(name = "id", nullable = false)
     private long id;
 

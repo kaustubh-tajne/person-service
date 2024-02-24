@@ -3,9 +3,13 @@ package com.hcl.personservice.controller;
 import com.hcl.personservice.dto.PersonDto;
 import com.hcl.personservice.model.Person;
 import com.hcl.personservice.service.PersonService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,35 +40,60 @@ public class PersonController {
     }
 
     @GetMapping
-    public List<PersonDto> getAll() {
-        return personService.getAll();
+    public ResponseEntity<List<PersonDto>> getAll() {
+        List<PersonDto> result = personService.getAll();
+//        ResponseEntity<List<PersonDto>> responseEntity = new ResponseEntity<>(result, HttpStatusCode.valueOf(200));
+//        ResponseEntity<List<PersonDto>> responseEntity = new ResponseEntity<>(result, HttpStatus.OK);
+//        ResponseEntity<List<PersonDto>> responseEntity = ResponseEntity.accepted().body(result);
+
+        ResponseEntity<List<PersonDto>> responseEntity = ResponseEntity.ok(result);
+        ResponseEntity.ok().body(result);
+        return responseEntity;
     }
 
     @GetMapping("/{id}")
-    public PersonDto getOneById(@PathVariable long id) {
+    public ResponseEntity<PersonDto> getOneById(@PathVariable long id) {
         LOGGER.info("GetOneById - {}", id);
 
-        return personService.getOneById(id);
+        final PersonDto result = personService.getOneById(id);
+        if (result == null) {
+            return ResponseEntity.notFound().build();
+//            throw new Exception();
+        }
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping
-    public PersonDto create(@RequestBody PersonDto personDto) {
+    public ResponseEntity<PersonDto> create(@Valid @RequestBody PersonDto personDto) {
         LOGGER.info("Person Got Created - {}", personDto);
 
-        return personService.create(personDto);
+        final PersonDto result = personService.create(personDto);
+        if (result == null)
+            return ResponseEntity.unprocessableEntity().build();
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public PersonDto update(@RequestBody PersonDto personDto) {
+    public ResponseEntity<PersonDto> update(@RequestBody PersonDto personDto) {
         LOGGER.info("Person Got updated - {}", personDto);
 
-        return personService.update(personDto);
+        final PersonDto result = personService.update(personDto);
+        if (result == null) {
+            return ResponseEntity.unprocessableEntity()
+                    .build();
+        }
+        return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable long id) {
+    public ResponseEntity<Void> delete(@PathVariable long id) {
         LOGGER.info("Person Got deleted {}", id);
 
-        return personService.delete(id);
+        final boolean isDeleted = personService.delete(id);
+        if (!isDeleted) {
+            // check the more perfect status code
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
