@@ -2,8 +2,10 @@ package com.hcl.personservice.service;
 
 import com.hcl.personservice.dao.service.PersonDaoService;
 import com.hcl.personservice.dto.PersonDto;
+import com.hcl.personservice.dto.ProjectDto;
 import com.hcl.personservice.exception.PersonNotFoundException;
 import com.hcl.personservice.model.Person;
+import com.hcl.personservice.model.Project;
 import io.swagger.v3.oas.annotations.servers.Server;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -78,7 +80,19 @@ public class PersonService {
         result.setFullName(fullName(person.getFirstName(), person.getLastName()));
         result.setJoiningDate(person.getJoiningDate());
         result.setNumberOfYearsOfExperience(findExperience(person.getJoiningDate()));
+
+        final ProjectDto projectDto = toDto(person.getProject());
+        result.setProjectDto(projectDto);
+
         return result;
+    }
+
+    private ProjectDto toDto(Project project) {
+        final ProjectDto projectDto = new ProjectDto();
+        projectDto.setId(project.getId());
+        projectDto.setTitle(project.getTitle());
+        projectDto.setTechnology(project.getTechnology());
+        return projectDto;
     }
 
     private String findExperience(LocalDate joiningDate) {
@@ -96,6 +110,22 @@ public class PersonService {
         person.setFirstName(personDto.getFirstName());
         person.setLastName(personDto.getLastName());
         person.setJoiningDate(personDto.getJoiningDate());
+
+        final ProjectDto projectDto = personDto.getProjectDto();
+        final Project project = toEntity(projectDto);
+
+        person.setProject(project);
+
         return person;
     }
+
+    private Project toEntity(ProjectDto projectDto) {
+        final Project project = new Project();
+        project.setId(projectDto.getId());
+        project.setTitle(projectDto.getTitle());
+        project.setTechnology(projectDto.getTechnology());
+
+        return project;
+    }
+
 }

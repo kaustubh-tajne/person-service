@@ -20,6 +20,9 @@ public class Person {
     private String lastName;
     @Column(name = "joining_date", nullable = false)
     private LocalDate joiningDate;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)
+    private Project project;
 
     public Person() {
     }
@@ -61,6 +64,14 @@ public class Person {
 
     public void setJoiningDate(LocalDate joiningDate) {
         this.joiningDate = joiningDate;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     @Override

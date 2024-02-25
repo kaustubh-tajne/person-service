@@ -22,6 +22,7 @@ public class PersonDto {
     private LocalDate joiningDate;
     @Null(message = "experience should be null")
     private String numberOfYearsOfExperience;
+    private ProjectDto projectDto;
 
     public long getId() {
         return id;
@@ -69,5 +70,13 @@ public class PersonDto {
 
     public void setNumberOfYearsOfExperience(String numberOfYearsOfExperience) {
         this.numberOfYearsOfExperience = numberOfYearsOfExperience;
+    }
+
+    public ProjectDto getProjectDto() {
+        return projectDto;
+    }
+
+    public void setProjectDto(ProjectDto projectDto) {
+        this.projectDto = projectDto;
     }
 }
