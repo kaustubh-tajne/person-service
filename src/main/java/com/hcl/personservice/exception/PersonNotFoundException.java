@@ -1,6 +1,6 @@
 package com.hcl.personservice.exception;
 
-public class PersonNotFoundException extends RuntimeException{
+public class PersonNotFoundException extends RuntimeException {
     private long id;
 
     public PersonNotFoundException() {}

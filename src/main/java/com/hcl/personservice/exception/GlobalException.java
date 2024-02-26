@@ -52,20 +52,31 @@ public class GlobalException {
     @ExceptionHandler(PersonNotFoundException.class)
     public ResponseEntity<ProblemDetail> handlePersonNotFoundException(PersonNotFoundException exception) {
         LOGGER.error(exception.getMessage(), exception);
-        final ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
+        System.out.println("*** 1 Exception ");
+        final ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
         problemDetail.setProperty("id", exception.getId());
         problemDetail.setProperty("exception", exception.getClass().getName());
+        System.out.println("*** 2 Exception ");
         return ResponseEntity.of(problemDetail).build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        System.out.println("*** MethodExc 1");
         LOGGER.error(exception.getMessage(), exception);
+        System.out.println("*** MethodExc 2");
+        System.out.println(exception.getMessage());
+
         final ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
 //        problemDetail.setProperty("exception", exception.getClass().getName());
+        System.out.println(exception.getFieldErrors());
         for (final FieldError fieldError: exception.getFieldErrors()) {
+            System.out.println(fieldError.getField());
+            System.out.println(fieldError.getRejectedValue());
             problemDetail.setProperty(fieldError.getField(), fieldError.getRejectedValue());
         }
+        System.out.println("*** MethodExc 3");
+        System.out.println(problemDetail);
         return ResponseEntity.of(problemDetail).build();
     }
 

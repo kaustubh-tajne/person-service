@@ -1,9 +1,11 @@
 package com.hcl.personservice.service;
 
 import com.hcl.personservice.dao.service.PersonDaoService;
+import com.hcl.personservice.dto.AddressDto;
 import com.hcl.personservice.dto.PersonDto;
 import com.hcl.personservice.dto.ProjectDto;
 import com.hcl.personservice.exception.PersonNotFoundException;
+import com.hcl.personservice.model.Address;
 import com.hcl.personservice.model.Person;
 import com.hcl.personservice.model.Project;
 import io.swagger.v3.oas.annotations.servers.Server;
@@ -16,10 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,8 +26,12 @@ import java.util.stream.Collectors;
 public class PersonService {
     private final static String SPACE = " ";
 
+    private final PersonDaoService personDaoService;
+
     @Autowired
-    private PersonDaoService personDaoService;
+    public PersonService(PersonDaoService personDaoService) {
+        this.personDaoService = personDaoService;
+    }
 //    private ModelMapper modelMapper = new ModelMapper();
 
     public List<PersonDto> getAll() {
@@ -37,15 +40,21 @@ public class PersonService {
     }
 
     public PersonDto getOneById(long id) {
+        System.out.println("#### 1 Get one ");
         final Optional<Person> optionalPerson = personDaoService.getOneById(id);
+        System.out.println("#### 2 Get one ");
         if (optionalPerson.isEmpty()) {
+            System.out.println("#### 3 Get one ");
 //            throw new EntityNotFoundException("Person with #id"+id+" not found");
             throw new PersonNotFoundException(id);
+//            return null;
         }
+        System.out.println("#### 4 Get one ");
         return toDto(optionalPerson.get());
     }
 
     public PersonDto create(PersonDto personDto) {
+        System.out.println("#### Create 1");
         final Person person = toEntity(personDto);
         final Person savedPerson = personDaoService.create(person);
         return toDto(savedPerson);
@@ -84,7 +93,26 @@ public class PersonService {
         final ProjectDto projectDto = toDto(person.getProject());
         result.setProjectDto(projectDto);
 
+        final Set<AddressDto> addressDtos = toDto(person.getAddresses());
+        result.setAddressDtos(addressDtos);
+
         return result;
+    }
+
+    private Set<AddressDto> toDto(Set<Address> addresses) {
+
+        return addresses
+                .stream()
+                .map(address -> toDto(address))
+                .collect(Collectors.toSet());
+    }
+
+    private AddressDto toDto(Address address) {
+        AddressDto addressDto = new AddressDto();
+        addressDto.setId(address.getId());
+        addressDto.setCity(address.getCity());
+        addressDto.setState(address.getState());
+        return addressDto;
     }
 
     private ProjectDto toDto(Project project) {
@@ -111,12 +139,43 @@ public class PersonService {
         person.setLastName(personDto.getLastName());
         person.setJoiningDate(personDto.getJoiningDate());
 
+        // Project Dto
         final ProjectDto projectDto = personDto.getProjectDto();
         final Project project = toEntity(projectDto);
 
         person.setProject(project);
+        project.setPerson(person);
+
+        // Address Dto
+        Set<AddressDto> addressDtos = personDto.getAddressDtos();
+        Set<Address> addresses = toEntity(addressDtos);
+
+        person.setAddresses(addresses);
+
+        // As it is bidirectional rel we have to set Person entity for address also
+        addresses.forEach(address -> address.setPerson(person));
+
+        // Normal For Loop
+//        for (final Address address: addresses) {
+//            address.setPerson(person);
+//        }
 
         return person;
+    }
+
+    private Set<Address> toEntity(Set<AddressDto> addressDtos) {
+        return addressDtos
+                            .stream()
+                .map(addressDto -> toEntity(addressDto))
+                .collect(Collectors.toSet());
+    }
+
+    private Address toEntity(AddressDto addressDto) {
+        Address address = new Address();
+        address.setId(addressDto.getId());
+        address.setCity(addressDto.getCity());
+        address.setState(addressDto.getState());
+        return address;
     }
 
     private Project toEntity(ProjectDto projectDto) {

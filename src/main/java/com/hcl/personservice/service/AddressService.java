@@ -22,8 +22,12 @@ public class AddressService {
 
     private final static String SPACE = " ";
 
+    private final AddressDaoService addressDaoService;
+
     @Autowired
-    private AddressDaoService addressDaoService;
+    public AddressService(AddressDaoService addressDaoService) {
+        this.addressDaoService = addressDaoService;
+    }
 //    private ModelMapper modelMapper = new ModelMapper();
 
     public List<AddressDto> getAll() {

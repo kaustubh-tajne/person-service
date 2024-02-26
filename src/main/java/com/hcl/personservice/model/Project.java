@@ -13,6 +13,8 @@ public class Project {
     private String title;
     @Column(name = "technology", nullable = false, length = 30)
     private String technology;
+    @OneToOne(mappedBy = "project")
+    private Person person;
 
     public Project() {
     }
@@ -45,5 +47,13 @@ public class Project {
 
     public void setTechnology(String technology) {
         this.technology = technology;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 }

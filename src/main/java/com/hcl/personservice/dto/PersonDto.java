@@ -1,5 +1,6 @@
 package com.hcl.personservice.dto;
 
+import com.hcl.personservice.model.Address;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
@@ -7,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import org.apache.logging.log4j.message.Message;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 public class PersonDto {
     private long id;
@@ -23,6 +25,7 @@ public class PersonDto {
     @Null(message = "experience should be null")
     private String numberOfYearsOfExperience;
     private ProjectDto projectDto;
+    private Set<AddressDto> addressDtos;
 
     public long getId() {
         return id;
@@ -78,5 +81,13 @@ public class PersonDto {
 
     public void setProjectDto(ProjectDto projectDto) {
         this.projectDto = projectDto;
+    }
+
+    public Set<AddressDto> getAddressDtos() {
+        return addressDtos;
+    }
+
+    public void setAddressDtos(Set<AddressDto> addressDtos) {
+        this.addressDtos = addressDtos;
     }
 }

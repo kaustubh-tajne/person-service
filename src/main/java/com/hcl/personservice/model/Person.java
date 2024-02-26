@@ -1,6 +1,7 @@
 package com.hcl.personservice.model;
 
 import jakarta.persistence.*;
+import java.util.Set;
 
 import java.time.LocalDate;
 
@@ -23,6 +24,8 @@ public class Person {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)
     private Project project;
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    private Set<Address> addresses;
 
     public Person() {
     }
@@ -72,6 +75,14 @@ public class Person {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public Set<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
     }
 
     @Override

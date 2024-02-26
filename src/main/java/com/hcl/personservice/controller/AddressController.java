@@ -89,7 +89,7 @@ public class AddressController {
             // check the more perfect status code
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -13,6 +13,9 @@ public class Address {
     private String city;
     @Column(name = "state", nullable = false, length = 20)
     private String state;
+    @ManyToOne()
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person person;
 
     public Address() {
     }
@@ -45,5 +48,13 @@ public class Address {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 }

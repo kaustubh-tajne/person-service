@@ -47,29 +47,34 @@ public class PersonController {
 //        ResponseEntity<List<PersonDto>> responseEntity = ResponseEntity.accepted().body(result);
 
         ResponseEntity<List<PersonDto>> responseEntity = ResponseEntity.ok(result);
-        ResponseEntity.ok().body(result);
+//        ResponseEntity.ok().body(result);
         return responseEntity;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PersonDto> getOneById(@PathVariable long id) {
         LOGGER.info("GetOneById - {}", id);
-
+        System.out.println("The entry point");
         final PersonDto result = personService.getOneById(id);
+        System.out.println("The second entry point");
         if (result == null) {
+            System.out.println("The null Result comes here");
             return ResponseEntity.notFound().build();
 //            throw new Exception();
         }
+        System.out.println("Not null means all good");
         return ResponseEntity.ok(result);
     }
 
     @PostMapping
     public ResponseEntity<PersonDto> create(@Valid @RequestBody PersonDto personDto) {
+        System.out.println("&&& Controller 1");
         LOGGER.info("Person Got Created - {}", personDto);
 
         final PersonDto result = personService.create(personDto);
         if (result == null)
             return ResponseEntity.unprocessableEntity().build();
+//        ResponseEntity.created(); // as this function ask for url location i.e. we are not using it
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

@@ -12,8 +12,12 @@ import java.util.Optional;
 
 @Service
 public class AddressDaoService {
+    private final AddressRepository addressRepository;
+
     @Autowired
-    private AddressRepository addressRepository;
+    public AddressDaoService(AddressRepository addressRepository) {
+        this.addressRepository = addressRepository;
+    }
 
     public List<Address> getAll() {
         return addressRepository.findAll();
