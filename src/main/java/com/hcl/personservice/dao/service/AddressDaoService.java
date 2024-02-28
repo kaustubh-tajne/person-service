@@ -13,10 +13,12 @@ import java.util.Optional;
 @Service
 public class AddressDaoService {
     private final AddressRepository addressRepository;
+    private final PersonRepository personRepository;
 
     @Autowired
-    public AddressDaoService(AddressRepository addressRepository) {
+    public AddressDaoService(AddressRepository addressRepository, PersonRepository personRepository) {
         this.addressRepository = addressRepository;
+        this.personRepository = personRepository;
     }
 
     public List<Address> getAll() {
@@ -25,6 +27,12 @@ public class AddressDaoService {
 
     public Optional<Address> getOneById(long id) {
         return addressRepository.findById(id);
+    }
+
+    public Optional<Person> getPersonByAddressId(long id) {
+        Optional<Address> optionalAddress = addressRepository.findById(id);
+        Long personId = optionalAddress.get().getPerson().getId();
+        return personRepository.findById(personId);
     }
 
     public Address create(Address address) {

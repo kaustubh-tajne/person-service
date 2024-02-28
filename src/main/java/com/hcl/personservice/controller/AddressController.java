@@ -58,6 +58,19 @@ public class AddressController {
         return ResponseEntity.ok(result);
     }
 
+    // Getting the person from address
+    @GetMapping("/person/{id}")
+    public ResponseEntity<PersonDto> getPersonByAddressId(@PathVariable long id) {
+        LOGGER.info("GetPersonByAddress - {} ", id);
+
+        final PersonDto result = addressService.getPersonByAddressId(id);
+        if (result == null) {
+            return ResponseEntity.notFound().build();
+//            throw new Exception();
+        }
+        return ResponseEntity.ok(result);
+    }
+
     @PostMapping
     public ResponseEntity<AddressDto> create(@RequestBody AddressDto addressDto) {
         LOGGER.info("Person Got Created - {}", addressDto);
@@ -91,5 +104,8 @@ public class AddressController {
         }
         return ResponseEntity.noContent().build();
     }
+
+
+
 
 }
